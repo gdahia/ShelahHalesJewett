@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Shelah's bound for the Hales–Jewett numbers"
+  description: >-
+    Lean 4 formalization of Shelah's proof of the Hales–Jewett theorem. For k ≥ 1 letters and r
+    colors, every coloring with r colors of the words of length n over k letters has a
+    monochromatic combinatorial line when n is at least the Ackermann function at level 5 and
+    argument 2k + r.
+  authors:
+    - "Gabriel Dahia"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Gabriel Dahia"
+
+classification:
+  arxiv: ["math.CO", "math.LO"]
+  msc2020: ["05D10", "03D20"]
+
+sources:
+  - title: "Primitive recursive bounds for van der Waerden numbers"
+    authors:
+      - "Saharon Shelah"
+    id: "https://doi.org/10.1090/S0894-0347-1988-0929498-X"
+    type: "paper"
+    location: "Journal of the American Mathematical Society 1 (1988), no. 3, 683–697"
+    relationship: "formalizes"
+    note: >-
+      The proof of the Hales–Jewett theorem and its bound. See fidelity.divergences for the
+      differences from the paper.
+    license: "unknown"
+    author_endorsement: "not-contacted"
+
+related_formalizations:
+  - id: "https://github.com/leanprover-community/mathlib4"
+    relationship: "builds-on"
+    note: >-
+      Mathlib has Combinatorics.Line, Combinatorics.Subspace and the Hales–Jewett theorem
+      Combinatorics.Line.exists_mono_in_high_dimension, proved by color focusing without a bound
+      on the dimension. This project uses the same definitions and the same induction on the
+      alphabet.
+
+status:
+  scope: >-
+    The project proves the Hales–Jewett theorem in every dimension at least
+    Combinatorics.Line.shelahBound and proves that shelahBound k r is less than
+    ack 5 (2 * k + r), for Mathlib's Ackermann function ack. The constants in this bound are
+    not optimized and there is no lower bound for shelahBound. The project does not prove in
+    Lean that shelahBound or ack 5 is primitive recursive, and it does not derive the bound
+    for the van der Waerden numbers. The sorry counts below refer to the library and
+    Solution.lean. Challenge.lean contains one statement placeholder.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude Opus 5.5"]
+      framework: "Claude Code"
+      tool_setup: >-
+        Lean 4, Mathlib and a shell. The agent set up the repository, wrote the statements and
+        the proofs and checked them with the Lean compiler. It did not have the paper and worked
+        from the standard account of Shelah's argument.
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "not tracked"
+        hardware: "local machine"
+      prompting_notes: >-
+        One instruction to formalize Shelah's bound for the Hales–Jewett numbers in a new
+        repository, with Mathlib's Combinatorics.Line and the structure of Mathlib's proof, and
+        a second on the proof style and the Palomar layout. Later instructions to put the
+        hypotheses of exists_insensitive before the colon, to rewrite the proofs in the style of
+        the author's other repositories, and to state the bound in Challenge.lean with Mathlib's
+        Ackermann function, where an earlier version had the recursion and the statement that
+        it is primitive recursive. The agent chose the bound ack 5 (2 * k + r).
+  spend_usd: "not tracked"
+  notes: >-
+    Claude Code wrote the Lean code, the README and this file at the request of Gabriel Dahia,
+    who edited and reviewed them. See review.notes.
+
+fidelity:
+  divergences: >-
+    The proof was not checked against the text of the paper. It follows the usual account of
+    Shelah's argument: a subspace on which the coloring is insensitive to two letters, built
+    from lines found by the pigeonhole principle among the words that are one letter on an
+    initial segment and the other letter afterwards.
+
+    The recursion for the bound is the one this proof gives, insensitiveBound and shelahBound,
+    and may differ from the paper's in its details. The subspace is built from the last
+    dimension to the first, and each step replaces the coloring by the coloring that records
+    the colors along the line just found, so the number of colors changes in the recursion.
+
+    The compared statement has the bound ack 5 (2 * k + r), which is larger than shelahBound
+    and is not in the paper.
+
+review:
+  status: "partially reviewed"
+  reviewers:
+    - "Gabriel Dahia"
+  notes: >-
+    Reviewed the statement compared in Challenge.lean, the main statements and the style of the
+    proofs of the three library files, the README and this file. There has been no independent
+    review. lake comparator, run on macOS on 13 October 2026 with its sandbox disabled, accepts
+    the solution with Lean's kernel, nanoda and con-ron.
+
+alignment:
+  namespace: "Combinatorics"
+  statements:
+    - source: "The Hales–Jewett theorem for words over Fin k with the bound ack 5 (2k + r)"
+      lean: "Combinatorics.Line.exists_mono_of_ack_le'"
+      module: "Challenge"
+      status: "proved"
+      note: "The compared statement. The bound ack 5 (2k + r) is not in the paper."
+    - source: "The Hales–Jewett theorem in every dimension at least ack 5 (2k + r)"
+      lean: "Combinatorics.Line.exists_mono_of_ack_le"
+      module: "ShelahHalesJewett.Ackermann"
+      status: "proved"
+      note: "For finite types."
+    - source: "The Hales–Jewett theorem in dimension shelahBound"
+      lean: "Combinatorics.Line.exists_mono_of_card_eq_shelahBound"
+      module: "ShelahHalesJewett.HalesJewett"
+      status: "proved"
+    - source: "The Hales–Jewett theorem in every dimension at least shelahBound"
+      lean: "Combinatorics.Line.exists_mono_of_shelahBound_le"
+      module: "ShelahHalesJewett.HalesJewett"
+      status: "proved"
+    - source: "The subspace on which a coloring is insensitive to two letters"
+      lean: "Combinatorics.Subspace.exists_insensitive"
+      module: "ShelahHalesJewett.HalesJewett"
+      status: "proved"
+    - source: "The pigeonhole step"
+      lean: "Combinatorics.Line.exists_map_eq_of_card_le"
+      module: "ShelahHalesJewett.Line"
+      status: "proved"
+    - source: "The dimension of the insensitive subspace is at most the fourth level of ack"
+      lean: "Combinatorics.Subspace.insensitiveBound_le_ack"
+      module: "ShelahHalesJewett.Ackermann"
+      status: "proved"
+      note: "Not in the paper."
+    - source: "The bound is below the fifth level of ack"
+      lean: "Combinatorics.Line.shelahBound_lt_ack"
+      module: "ShelahHalesJewett.Ackermann"
+      status: "proved"
+      note: "Not in the paper."
+
+acknowledgements: "Lean 4 and Mathlib; the Palomar registry template."
