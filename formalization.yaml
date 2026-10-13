@@ -102,8 +102,9 @@ review:
   notes: >-
     Reviewed the statement compared in Challenge.lean, the main statements and the style of the
     proofs of the three library files, the README and this file. There has been no independent
-    review. lake comparator, run on macOS on 13 October 2026 with its sandbox disabled, accepts
-    the solution with Lean's kernel, nanoda and con-ron.
+    review. The repository's CI runs scripts/verify-comparator.sh, which runs lake comparator in
+    its sandbox. On 13 October 2026 it accepted the solution with Lean's kernel, nanoda and
+    con-ron.
 
 alignment:
   namespace: "Combinatorics"
