@@ -34,6 +34,7 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           build: false
+          lint: false
       - name: Install bubblewrap for lake comparator's sandbox
         # Ubuntu restricts unprivileged user namespaces through AppArmor, which `bwrap` needs.
         run: |
